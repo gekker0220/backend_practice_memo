@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
+    />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="script-src 'self' 'unsafe-inline';"
+    />
+
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <style>
+    .main {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    #login {
+      height: 50px;
+      font-weight: bold;
+      font-size: 20px;
+    }
+  </style>
+  <body>
+    <div class="container main">
+      <div>Gekker Backend Practice 1, Memo</div>
+      <div
+        class="container"
+        style="display: flex; flex-direction: row; align-items: center"
+      >
+        <div class="container">
+          <input type="text" id="id" placeholder="id" />
+          <input type="text" id="pw" placeholder="pw" />
+        </div>
+        <a
+          class="waves-effect waves-light btn-large indigo lighten-2"
+          id="login"
+          >로그인</a
+        >
+      </div>
+
+      <br />
+      <a
+        class="waves-effect waves-light btn-large indigo lighten-2"
+        href="/register"
+        >회원가입</a
+      >
+    </div>
+  </body>
+  <script>
+    let id = document.getElementById("id");
+    let pw = document.getElementById("pw");
+    let btn = document.getElementById("login");
+
+    btn.addEventListener("click", () => {
+      fetch("http://localhost:3000/users/login", {
+        method: "POST", // Specify the HTTP method
+        headers: {
+          "Content-Type": "application/json", // Specify the content type
+        },
+        body: JSON.stringify({
+          userid: id.value,
+          password: pw.value,
+        }),
+      })
+        .then((response) => {
+          // 서버 응답을 JSON 형태로 파싱
+          return response.json();
+        })
+        .then((data) => {
+          // 처리할 데이터
+          if (data.msg == 1) {
+            document.cookie = `userid=${data.id}`;
+            var date = new Date();
+            date.setMinutes(date.getMinutes() + 60);
+            window.location.href = "/memo";
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+    });
+  </script>
+</html>

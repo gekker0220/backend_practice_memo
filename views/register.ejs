@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Document</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
+    />
+  </head>
+  <style>
+    .main {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+  </style>
+  <body>
+    <div class="container main">
+      <div>Kim Eun Gyo Backend Practice 1, Memo</div>
+      <div
+        class="container"
+        style="display: flex; flex-direction: row; align-items: center"
+      >
+        <div class="container">
+          <input type="text" placeholder="아이디를 입력하세요" id="id" />
+          <input
+            type="password"
+            id="password"
+            placeholder="패스워드를 입력하세요"
+          />
+        </div>
+        <a
+          class="waves-effect waves-light btn-large indigo lighten-2"
+          href="/"
+          id="save"
+          >회원가입</a
+        >
+      </div>
+    </div>
+  </body>
+  <script>
+    let id = document.getElementById("id");
+    let save = document.getElementById("save");
+    let password = document.getElementById("password");
+
+    save.addEventListener("click", () => {
+      let userid = id.value;
+      let pw = password.value;
+      console.log(userid, pw);
+      //유저의 기존 메모 조회
+      fetch("http://localhost:3000/users/save", {
+        method: "POST", // Specify the HTTP method
+        headers: {
+          "Content-Type": "application/json", // Specify the content type
+        },
+        body: JSON.stringify({
+          userid: userid,
+          password: pw,
+        }),
+      })
+        .then((response) => {
+          // 서버 응답을 JSON 형태로 파싱
+          return response.json();
+        })
+        .then((data) => {
+          // 처리할 데이터
+          if (data.message == 0) {
+            alert("다른 id를 사용하세요");
+            id.value = "";
+          } else {
+            alert("id 등록이 완료되었습니다.");
+            window.location.href = "/";
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+    });
+  </script>
+</html>
